@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.salesorder.microservice.salesorderservice.bo.CustomerSOS;
 import com.salesorder.microservice.salesorderservice.bo.ItemVO;
 import com.salesorder.microservice.salesorderservice.bo.OrderLineItem;
 import com.salesorder.microservice.salesorderservice.bo.OrderVO;
@@ -28,6 +29,9 @@ public class SalesOrderController {
 	
 	@Autowired
 	private SalesOrderRepository salesOrderRepository;
+	
+	@Autowired
+	private CustomerSOSRepository customerSOSRepository;
 	
 	@Autowired
 	private OrderLineItemRepository orderLineItemRepository;
@@ -101,6 +105,14 @@ public class SalesOrderController {
 			}
 		}
 		return id+1;
+	}
+	
+	@PostMapping("/customer")
+	public boolean createCustomerByEvent(@RequestBody CustomerSOS  customer){
+		log.info("Inside createCustomerByEvent");		
+		customerSOSRepository.save(customer);
+		return true;
+		
 	}
 
 }
