@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.salesorder.microservice.salesorderservice.bo.SalesOrder;
 
-
-@FeignClient(name ="zuul-edge-server")
-@RibbonClient(name ="item-service")
+@FeignClient(name ="item-service", url="localhost:8801")
+//@FeignClient(name ="zuul-edge-server")
+//@RibbonClient(name ="item-service")
 public interface ItemService {
 	
-	@GetMapping("/item-service/items/{itemname}")
+	@GetMapping("/items/{itemname}")
 	public SalesOrder findItem(@PathVariable("itemname") String itemName);
 
 }

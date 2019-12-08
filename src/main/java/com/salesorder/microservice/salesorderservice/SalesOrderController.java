@@ -18,7 +18,6 @@ import com.salesorder.microservice.salesorderservice.bo.SalesOrder;
 
 
 @RestController
-@EnableFeignClients("com.salesorder.microservice.salesorderservice")
 public class SalesOrderController {
 	
 	@Autowired
