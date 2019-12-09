@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.salesorder.microservice.salesorderservice.bo.CustomerSOS;
@@ -24,6 +25,7 @@ import com.salesorder.microservice.salesorderservice.bo.SalesOrder;
 
 
 @RestController
+@EnableHystrix
 public class SalesOrderController {
 	
 	private static Logger log = LoggerFactory.getLogger(SalesOrderController.class);
