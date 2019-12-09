@@ -49,7 +49,7 @@ public class SalesOrderController {
 	}
 	
 	@PostMapping("/orders")
-	@HystrixCommand(fallbackMethod="fallBackCreateOrders")
+	//@HystrixCommand(fallbackMethod="fallBackCreateOrders")
 	public Long createOrders(@RequestBody OrderVO  orderVO) throws ParseException, SalesOrderException{
 		log.info("Inside createOrder");	
 		if(null == orderVO.getItems() || orderVO.getItems().isEmpty()) {
@@ -119,6 +119,13 @@ public class SalesOrderController {
 			}
 		}
 		return id+1;
+	}
+	
+	@PostMapping("/orders/fault-tolerance")
+	@HystrixCommand(fallbackMethod="fallBackCreateOrders")
+	public Long createOrdersFaultTolerance(@RequestBody OrderVO  orderVO) {
+		log.info("Inside createOrdersFaultTolerance");	
+		throw new RuntimeException("Order issue");
 	}
 	
 	@PostMapping("/customer")
