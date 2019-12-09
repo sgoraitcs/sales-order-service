@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.salesorder.microservice.salesorderservice.bo.CustomerSOS;
 import com.salesorder.microservice.salesorderservice.bo.ItemVO;
 import com.salesorder.microservice.salesorderservice.bo.OrderLineItem;
@@ -46,7 +47,8 @@ public class SalesOrderController {
 	}
 	
 	@PostMapping("/orders")
-	public Long createOrder(@RequestBody OrderVO  orderVO) throws ParseException{
+	@HystrixCommand(fallbackMethod="fallBackCreateOrders")
+	public Long createOrders(@RequestBody OrderVO  orderVO) throws ParseException{
 		log.info("Inside createOrder");	
 		if(null == orderVO.getItems() || orderVO.getItems().isEmpty()) {
 			return 0L;
@@ -60,7 +62,7 @@ public class SalesOrderController {
 		String itemname;
 		for(ItemVO item : orderVO.getItems()) {
 			itemname = item.getName();
-			salesOrder = findItem(itemname);
+			salesOrder = itemService.findItem(itemname);
 			if(salesOrder.getId() > 0) {
 				orderLineItem = new OrderLineItem(lineItemId, item.getName(), item.getQuantity(), orderId);
 				orderLineItemRepository.save(orderLineItem);
@@ -79,6 +81,10 @@ public class SalesOrderController {
 		salesOrderRepository.save(salesOrder);
 		return orderId;
 		
+	}
+	
+	public Long fallBackCreateOrders()  {
+		return 0L;
 	}
 	
 	private long generateLineItemId(List<OrderLineItem> list) {
