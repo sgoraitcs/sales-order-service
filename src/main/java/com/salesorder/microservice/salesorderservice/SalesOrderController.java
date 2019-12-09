@@ -48,10 +48,14 @@ public class SalesOrderController {
 	
 	@PostMapping("/orders")
 	@HystrixCommand(fallbackMethod="fallBackCreateOrders")
-	public Long createOrders(@RequestBody OrderVO  orderVO) throws ParseException{
+	public Long createOrders(@RequestBody OrderVO  orderVO) throws ParseException, SalesOrderException{
 		log.info("Inside createOrder");	
 		if(null == orderVO.getItems() || orderVO.getItems().isEmpty()) {
 			return 0L;
+		}
+		CustomerSOS customer = customerSOSRepository.findOne(orderVO.getCustId());
+		if(null == customer) {
+			throw new SalesOrderException("Customer Not found");
 		}
 		//validate customer_sos
 		long orderId = generateOrderId(salesOrderRepository.findAll());
@@ -67,6 +71,8 @@ public class SalesOrderController {
 				orderLineItem = new OrderLineItem(lineItemId, item.getName(), item.getQuantity(), orderId);
 				orderLineItemRepository.save(orderLineItem);
 				price+=salesOrder.getTotalPrice() * item.getQuantity();
+			} else {
+				throw new SalesOrderException("Item Not found: "+itemname);
 			}
 			lineItemId++;
 		}
