@@ -69,7 +69,7 @@ public class SalesOrderController {
 		for(ItemVO item : orderVO.getItems()) {
 			itemname = item.getName();
 			salesOrder = itemService.findItem(itemname);
-			if(salesOrder.getId() > 0) {
+			if(null != salesOrder && salesOrder.getId() > 0) {
 				orderLineItem = new OrderLineItem(lineItemId, item.getName(), item.getQuantity(), orderId);
 				orderLineItemRepository.save(orderLineItem);
 				price+=salesOrder.getTotalPrice() * item.getQuantity();

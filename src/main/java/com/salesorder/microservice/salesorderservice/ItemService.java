@@ -1,8 +1,5 @@
 package com.salesorder.microservice.salesorderservice;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.Produces;
-
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.cloud.netflix.ribbon.RibbonClient;
 import org.springframework.web.bind.annotation.GetMapping;
